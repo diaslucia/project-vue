@@ -1,19 +1,29 @@
 <template>
-  <router-link :to="{ name: 'detail', params: { id: product.id } }">
-    <div class="card">
-      <img :src="product.image" :alt="product.name" class="img" />
-      <div class="innerContainer">
-        <h3 class="title">{{ product.name }}</h3>
-        <p class="text">{{ product.description }}</p>
-        <p class="price">${{ product.price }} ud.</p>
-      </div>
+  <div class="card">
+    <img :src="product.image" :alt="product.name" class="img" />
+    <div class="innerContainer">
+      <h3 class="title">{{ product.name }}</h3>
+      <p class="text">{{ product.description }}</p>
+      <p class="price">${{ product.price }} ud.</p>
+      <ItemCount
+        :quantity="quantity"
+        @sub-product="substractProduct"
+        @sum-product="sumProduct"
+      />
+      <button @click="addCart">Add to cart</button>
     </div>
-  </router-link>
+  </div>
 </template>
 
 <script>
+import ItemCount from "./ItemCount.vue";
+import { cartStore } from "@/store/cartStore";
+
 export default {
   name: "ItemDetail",
+  components: {
+    ItemCount,
+  },
   props: {
     product: {
       id: Number,
@@ -23,9 +33,21 @@ export default {
       image: String,
     },
   },
+  data: () => ({
+    cartStore,
+    quantity: 1,
+  }),
   methods: {
     addCart() {
-      console.log("agregado");
+      this.cartStore.addToCart(this.product, this.quantity);
+    },
+    substractProduct() {
+      if (this.quantity > 1) {
+        this.quantity--;
+      }
+    },
+    sumProduct() {
+      this.quantity++;
     },
   },
 };
@@ -33,35 +55,32 @@ export default {
 
 <style scoped>
 .card {
-  width: 250px;
   height: 230px;
-  background-color: white;
-  border-radius: 10px;
+  width: 800px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 20px;
 }
 .img {
   width: 250px;
-  height: 150px;
+  height: 250px;
   object-fit: cover;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
 }
 .innerContainer {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
+  height: 100%;
 }
 .title {
   font-size: 17px;
-  padding: 0 10px;
 }
 .price {
   font-size: 14px;
-  padding: 0 10px;
 }
 
 .text {

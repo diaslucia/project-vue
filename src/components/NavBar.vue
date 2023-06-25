@@ -9,7 +9,7 @@
         <router-link :to="{ name: 'cart' }"
           >Cart
           <div class="number">
-            <span>0</span>
+            <span>{{ this.cartStore.cartTotal() }}</span>
           </div></router-link
         >
       </li>
@@ -18,14 +18,20 @@
 </template>
 
 <script>
+import { cartStore } from "@/store/cartStore";
+
 export default {
   name: "NavBar",
+  data: () => ({
+    cartStore,
+    total: 0,
+  }),
 };
 </script>
 
 <style scoped>
 .nav {
-  background-color: white;
+  background-color: lightcoral;
   width: 100%;
   margin-bottom: 30px;
 }

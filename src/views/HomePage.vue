@@ -11,11 +11,11 @@
 
 <script>
 import ItemCard from "../components/user/ItemCard.vue";
-export const apiProductos = process.env.VUE_APP_MOCKAPI_UR;
+const apiProductos = process.env.VUE_APP_MOCKAPI_URL;
 
 export default {
   name: "HomePage",
-  componentes: {
+  components: {
     ItemCard,
   },
   data: () => ({
@@ -23,13 +23,13 @@ export default {
     fetchError: "",
   }),
   created() {
+    console.log(`${apiProductos}/products`);
     this.fetchData(apiProductos);
   },
   methods: {
     async fetchData(url) {
       try {
-        this.products = await (await fetch(url)).json();
-        console.log(this.products);
+        this.products = await (await fetch(`${url}/products`)).json();
       } catch (err) {
         this.fetchError = "Error de conexión.";
         console.log(err);
