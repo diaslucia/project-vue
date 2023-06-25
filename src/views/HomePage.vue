@@ -1,14 +1,23 @@
 <template>
   <div>
     <h1>home</h1>
+    <ItemCard
+      v-for="product in products"
+      :key="product.id"
+      :product="product"
+    />
   </div>
 </template>
 
 <script>
+import ItemCard from "../components/user/ItemCard.vue";
 export const apiProductos = process.env.VUE_APP_MOCKAPI_UR;
 
 export default {
   name: "HomePage",
+  componentes: {
+    ItemCard,
+  },
   data: () => ({
     products: [],
     fetchError: "",

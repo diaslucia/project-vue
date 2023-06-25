@@ -13,11 +13,6 @@
           </div></router-link
         >
       </li>
-      <!--  <li  class="link">
-        <router-link :to="{ name: 'detail', params: { id: 1 } }"
-          >Detalle</router-link
-        >
-      </li> -->
     </ul>
   </nav>
 </template>
