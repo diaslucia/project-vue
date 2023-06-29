@@ -10,7 +10,8 @@
 </template>
 
 <script>
-import ItemCard from "../components/user/ItemCard.vue";
+import ItemCard from "@/components/user/ItemCard.vue";
+import { userStore } from "@/store/userStore";
 const apiProductos = process.env.VUE_APP_MOCKAPI_URL;
 
 export default {
@@ -21,10 +22,11 @@ export default {
   data: () => ({
     products: [],
     fetchError: "",
+    userStore,
   }),
   created() {
-    console.log(`${apiProductos}/products`);
     this.fetchData(apiProductos);
+    this.getUser();
   },
   methods: {
     async fetchData(url) {
@@ -33,6 +35,11 @@ export default {
       } catch (err) {
         this.fetchError = "Error de conexión.";
         console.log(err);
+      }
+    },
+    getUser() {
+      if (this.userStore.user.admin) {
+        this.$router.push("/admin");
       }
     },
   },

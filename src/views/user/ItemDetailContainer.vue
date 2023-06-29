@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import ItemDetail from "../components/user/ItemDetail.vue";
+import ItemDetail from "../../components/user/ItemDetail.vue";
 const apiProductos = process.env.VUE_APP_MOCKAPI_URL;
 
 export default {
