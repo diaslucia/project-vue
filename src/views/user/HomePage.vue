@@ -1,12 +1,17 @@
 <template>
   <div class="container">
     <SpinnerSpin v-if="spinner" />
-    <div v-else class="innerContainer">
-      <ItemCard
-        v-for="product in products"
-        :key="product.id"
-        :product="product"
-      />
+    <div v-else>
+      <div v-if="fetchError === 'Error'">
+        <p class="errorMessage">Sorry! There are no products at the moment</p>
+      </div>
+      <div class="innerContainer" v-else>
+        <ItemCard
+          v-for="product in products"
+          :key="product.id"
+          :product="product"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -39,7 +44,7 @@ export default {
         this.products = await (await fetch(`${url}/products`)).json();
         this.spinner = false;
       } catch (err) {
-        this.fetchError = "Error de conexión.";
+        this.fetchError = "Error";
         console.log(err);
       }
     },
@@ -70,5 +75,11 @@ export default {
   max-width: 800px;
   margin: 0 auto;
   margin: 100px 0;
+}
+
+.errorMessage {
+  color: #572e4f;
+  font-size: 18px;
+  align-self: center;
 }
 </style>

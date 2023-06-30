@@ -11,6 +11,7 @@ import OrdersPage from "./views/admin/OrdersPage.vue";
 import ItemDetailContainer from "./views/user/ItemDetailContainer.vue";
 import RegisterPage from "./views/user/RegisterPage.vue";
 import MyOrdersPage from "./views/user/MyOrdersPage.vue";
+import ErrorPage from "./views/ErrorPage.vue";
 
 Vue.use(VueRouter);
 
@@ -30,6 +31,7 @@ const routes = [
     name: "edit-product",
   },
   { path: "/detail/:id", component: ItemDetailContainer, name: "detail" },
+  { path: "*", component: ErrorPage },
 ];
 
 const router = new VueRouter({

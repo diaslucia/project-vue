@@ -7,7 +7,11 @@
         <p class="price">US${{ product.price }} ud.</p>
       </div>
       <p class="text">{{ product.description }}</p>
-      <div class="buttonContainer">
+      <div class="buttonContainer" v-if="added">
+        <p class="added">Product added!</p>
+        <button @click="goCart" class="button">Go to cart</button>
+      </div>
+      <div class="buttonContainer" v-else>
         <ItemCount
           :quantity="quantity"
           @sub-product="substractProduct"
@@ -40,10 +44,12 @@ export default {
   data: () => ({
     cartStore,
     quantity: 1,
+    added: false,
   }),
   methods: {
     addCart() {
       this.cartStore.addToCart(this.product, this.quantity);
+      this.added = true;
     },
     substractProduct() {
       if (this.quantity > 1) {
@@ -52,6 +58,9 @@ export default {
     },
     sumProduct() {
       this.quantity++;
+    },
+    goCart() {
+      this.$router.push("/cart");
     },
   },
 };
@@ -106,6 +115,11 @@ export default {
 .text {
   font-size: 16px;
   color: #171717;
+}
+
+.added {
+  font-size: 16px;
+  color: #027b7f;
 }
 
 .button {
