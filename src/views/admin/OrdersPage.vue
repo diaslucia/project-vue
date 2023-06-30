@@ -2,7 +2,36 @@
   <div>
     <SpinnerSpin v-if="spinner" />
     <div class="container" v-else>
-      <p>ordenes</p>
+      <div v-for="(user, i) in this.users" :key="i">
+        <div v-if="user.order.length > 0">
+          <div class="userContainer">
+            <p>{{ user.name }}</p>
+            <p>{{ user.email }}</p>
+          </div>
+
+          <div v-for="(data, i) in user.order" :key="i" class="firstTable">
+            <div class="textContainer">
+              <p class="timestamp">
+                {{ data.timestamp }}
+              </p>
+              <p class="total">Total: US$ {{ data.total }}</p>
+            </div>
+            <div class="line"></div>
+
+            <table v-for="(product, i) in data.products" :key="i">
+              <tr class="card">
+                <td class="center_td">
+                  <img :src="product.image" :alt="product.name" class="img" />
+                </td>
+                <td class="title bigger_space">{{ product.name }}</td>
+                <td class="text center_td">US$ {{ product.price }}</td>
+                <td class="text">quantity: {{ product.quantity }}</td>
+                <td class="text">subtotal: US${{ product.subtotal }}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -15,6 +44,7 @@ import SpinnerSpin from "@/components/SpinnerSpin.vue";
 export default {
   name: "OrdersPage",
   data: () => ({
+    users: [],
     orders: [],
     spinner: true,
     userStore,
@@ -37,28 +67,30 @@ export default {
     },
     async fetchData() {
       try {
-        let users = await (await fetch(`${url}/users`)).json();
-        this.filterOrders(users);
+        this.users = await (await fetch(`${url}/users`)).json();
+        this.spinner = false;
       } catch (err) {
-        this.fetchError = "Error de conexión.";
+        this.fetchError = "Error";
         console.log(err);
       }
-    },
-    filterOrders(users) {
-      let copyUsers = [...users];
-      for (let i = 0; i <= copyUsers.length; i++) {
-        if (users[i].order.length > 0) {
-          console.log(users[i].order);
-          /*   this.orders.push(users[i].order); */
-        }
-      }
-      this.spinner = false;
     },
   },
 };
 </script>
 
 <style scoped>
+.userContainer {
+  display: flex;
+  justify-content: space-around;
+  background-color: #572e4f;
+  padding: 10px 0;
+  width: 100%;
+  border-radius: 15px;
+  margin-top: 30px;
+  text-align: center;
+  color: white;
+  font-size: 16px;
+}
 .container {
   display: flex;
   flex-direction: column;
@@ -66,6 +98,74 @@ export default {
   align-items: center;
   min-height: calc(100vh - 60px);
   height: 100%;
-  padding: 100px 0;
+  padding: 60px 0;
+}
+
+.firstTable {
+  margin: 30px 0;
+}
+
+td {
+  width: 16%;
+  text-align: start;
+  border: none;
+}
+.center_td {
+  text-align: center !important;
+}
+
+.bigger_space {
+  width: 25%;
+}
+
+.line {
+  width: 100%;
+  height: 1px;
+  background-color: #572e4f;
+  margin: 10px 0;
+}
+.card {
+  width: 800px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 auto;
+}
+.img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+.title {
+  color: #171717;
+  font-size: 16px;
+  font-weight: bold;
+}
+.text {
+  color: #171717;
+  font-size: 14px;
+}
+
+.textContainer {
+  display: flex;
+  justify-content: space-between;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 30px;
+}
+
+.timestamp {
+  font-size: 12px;
+  color: #171717;
+}
+
+.total {
+  color: #572e4f;
+  font-size: 16px;
+  text-align: end;
+  margin-right: 30px;
+  font-weight: bold;
 }
 </style>
