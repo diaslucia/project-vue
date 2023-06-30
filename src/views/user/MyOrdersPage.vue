@@ -6,9 +6,15 @@
         :key="i"
         class="firstTable"
       >
-        <p class="orderNumber">Order {{ i + 1 }}</p>
+        <div class="textContainer">
+          <p class="orderNumber">Order {{ i + 1 }}</p>
+          <p class="timestamp">
+            {{ order.timestamp }}
+          </p>
+        </div>
         <div class="line"></div>
-        <table v-for="(product, i) in order" :key="i">
+
+        <table v-for="(product, i) in order.products" :key="i">
           <tr class="card">
             <td class="center_td">
               <img :src="product.image" :alt="product.name" class="img" />
@@ -19,6 +25,10 @@
             <td class="text">subtotal: US${{ product.subtotal }}</td>
           </tr>
         </table>
+
+        <div class="totalContainer">
+          <p class="total">Total: US$ {{ order.total }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -31,15 +41,10 @@ export default {
   name: "MyOrdersPage",
   data: () => ({
     userStore,
-    orders: [],
   }),
-  created() {
-    this.getOrder();
-  },
   methods: {
-    getOrder() {
-      this.orders = this.userStore.user.order;
-      console.log(this.orders);
+    getOrder(product) {
+      console.log(product);
     },
   },
 };
@@ -55,15 +60,14 @@ export default {
 }
 
 .innerContainer {
-  padding: 70px 0;
+  padding: 60px 0;
 }
 
 .firstTable {
-  margin: 30px 0;
+  margin: 50px 0;
 }
 
 .orderNumber {
-  width: 100%;
   text-align: center;
   font-size: 18px;
   font-weight: bold;
@@ -110,5 +114,34 @@ td {
 .text {
   color: #171717;
   font-size: 14px;
+}
+
+.textContainer {
+  display: flex;
+  justify-content: flex-start;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 30px;
+}
+
+.timestamp {
+  font-size: 12px;
+  color: #171717;
+}
+
+.totalContainer {
+  background-color: #572e4f;
+  padding: 10px 0;
+  width: 100%;
+  border-radius: 15px;
+  margin-top: 15px;
+}
+
+.total {
+  color: white;
+  font-size: 16px;
+  text-align: end;
+  margin-right: 30px;
 }
 </style>

@@ -32,6 +32,7 @@
 import ItemCart from "@/components/cart/ItemCart.vue";
 import { cartStore } from "@/store/cartStore";
 import { userStore } from "@/store/userStore";
+import { getTimeStamp } from "@/utils/helper.js";
 const url = process.env.VUE_APP_MOCKAPI_URL;
 
 export default {
@@ -46,15 +47,23 @@ export default {
   methods: {
     buyCart() {
       if (Object.keys(this.userStore.user).length != 0) {
+        const timestamp = getTimeStamp();
+        const total = this.cartStore.cartTotalPrice();
+
+        const newOrder = {
+          timestamp: timestamp,
+          total: total,
+          products: [...this.cartStore.cart],
+        };
+
+        this.userStore.user.order.push(newOrder);
+
         fetch(`${url}/users/${this.userStore.user.id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            ...this.userStore.user,
-            order: [...this.userStore.user.order, this.cartStore.cart],
-          }),
+          body: JSON.stringify(this.userStore.user),
         })
           .then((res) => res.json())
           .then(() => (this.cartStore.cart = []))

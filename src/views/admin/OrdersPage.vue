@@ -37,7 +37,7 @@ export default {
       let copyUsers = [...users];
       for (let i = 0; i <= copyUsers.length; i++) {
         if (users[i].order.length > 0) {
-          console.log(users[i].order);
+          console.log(users[i]);
           /*   this.orders.push(users[i].order); */
         }
       }

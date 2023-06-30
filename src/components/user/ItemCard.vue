@@ -14,7 +14,7 @@ export default {
   name: "ItemCard",
   props: {
     product: {
-      id: Number,
+      id: String,
       name: String,
       price: Number,
       image: String,

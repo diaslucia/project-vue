@@ -147,7 +147,8 @@ export default {
 .dropdown {
   position: absolute;
   background-color: rgb(71, 54, 86);
-  padding: 10px;
+  padding: 10px 0;
+  width: 100px;
   border-radius: 10px;
   top: 65px;
   right: 35px;

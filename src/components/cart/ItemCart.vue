@@ -35,7 +35,7 @@ export default {
   }),
   props: {
     product: {
-      id: Number,
+      id: String,
       name: String,
       quantity: Number,
       subtotal: Number,
