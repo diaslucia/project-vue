@@ -20,11 +20,14 @@ export default {
     userStore,
   }),
   created() {
-    this.getUser();
+    this.redirectUser();
   },
   methods: {
-    getUser() {
-      if (this.userStore.user.admin === false) {
+    redirectUser() {
+      if (
+        Object.keys(this.userStore.user).length === 0 ||
+        this.userStore.user.admin === false
+      ) {
         this.$router.push("/");
       }
     },

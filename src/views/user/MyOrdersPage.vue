@@ -1,33 +1,39 @@
 <template>
-  <div class="container">
-    <div class="innerContainer">
-      <div
-        v-for="(order, i) in this.userStore.user.order"
-        :key="i"
-        class="firstTable"
-      >
-        <div class="textContainer">
-          <p class="orderNumber">Order {{ i + 1 }}</p>
-          <p class="timestamp">
-            {{ order.timestamp }}
-          </p>
-        </div>
-        <div class="line"></div>
+  <div>
+    <div class="emptyContainer" v-if="this.userStore.user.order.length === 0">
+      <p class="textEmpty">You don't have orders</p>
+    </div>
 
-        <table v-for="(product, i) in order.products" :key="i">
-          <tr class="card">
-            <td class="center_td">
-              <img :src="product.image" :alt="product.name" class="img" />
-            </td>
-            <td class="title bigger_space">{{ product.name }}</td>
-            <td class="text center_td">US$ {{ product.price }}</td>
-            <td class="text">quantity: {{ product.quantity }}</td>
-            <td class="text">subtotal: US${{ product.subtotal }}</td>
-          </tr>
-        </table>
+    <div class="container" v-else>
+      <div class="innerContainer">
+        <div
+          v-for="(order, i) in this.userStore.user.order"
+          :key="i"
+          class="firstTable"
+        >
+          <div class="textContainer">
+            <p class="orderNumber">Order {{ i + 1 }}</p>
+            <p class="timestamp">
+              {{ order.timestamp }}
+            </p>
+          </div>
+          <div class="line"></div>
 
-        <div class="totalContainer">
-          <p class="total">Total: US$ {{ order.total }}</p>
+          <table v-for="(product, i) in order.products" :key="i">
+            <tr class="card">
+              <td class="center_td">
+                <img :src="product.image" :alt="product.name" class="img" />
+              </td>
+              <td class="title bigger_space">{{ product.name }}</td>
+              <td class="text center_td">US$ {{ product.price }}</td>
+              <td class="text">quantity: {{ product.quantity }}</td>
+              <td class="text">subtotal: US${{ product.subtotal }}</td>
+            </tr>
+          </table>
+
+          <div class="totalContainer">
+            <p class="total">Total: US$ {{ order.total }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -57,6 +63,20 @@ export default {
   align-items: flex-start;
   min-height: calc(100vh - 60px);
   width: 100%;
+}
+
+.emptyContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 60px);
+  width: 100%;
+}
+
+.textEmpty {
+  color: #572e4f;
+  font-size: 18px;
+  align-self: center;
 }
 
 .innerContainer {

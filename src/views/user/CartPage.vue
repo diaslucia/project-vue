@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <p v-if="this.cartStore.cart.length === 0" class="text">
-      No hay productos en tu carrito
+      Your cart is empty!
     </p>
 
     <table v-else class="table">

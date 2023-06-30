@@ -96,8 +96,17 @@ export default {
   },
   created() {
     this.getProduct();
+    this.redirectUser();
   },
   methods: {
+    redirectUser() {
+      if (
+        Object.keys(this.userStore.user).length === 0 ||
+        this.userStore.user.admin === false
+      ) {
+        this.$router.push("/");
+      }
+    },
     async getProduct() {
       fetch(`${url}/products/${this.$route.params.id}`, {
         method: "GET",

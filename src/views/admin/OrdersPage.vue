@@ -9,6 +9,7 @@
 
 <script>
 const url = process.env.VUE_APP_MOCKAPI_URL;
+import { userStore } from "@/store/userStore";
 import SpinnerSpin from "@/components/SpinnerSpin.vue";
 
 export default {
@@ -16,14 +17,24 @@ export default {
   data: () => ({
     orders: [],
     spinner: true,
+    userStore,
   }),
   components: {
     SpinnerSpin,
   },
   created() {
     this.fetchData();
+    this.redirectUser();
   },
   methods: {
+    redirectUser() {
+      if (
+        Object.keys(this.userStore.user).length === 0 ||
+        this.userStore.user.admin === false
+      ) {
+        this.$router.push("/");
+      }
+    },
     async fetchData() {
       try {
         let users = await (await fetch(`${url}/users`)).json();
@@ -37,7 +48,7 @@ export default {
       let copyUsers = [...users];
       for (let i = 0; i <= copyUsers.length; i++) {
         if (users[i].order.length > 0) {
-          console.log(users[i]);
+          console.log(users[i].order);
           /*   this.orders.push(users[i].order); */
         }
       }

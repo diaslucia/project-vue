@@ -86,7 +86,18 @@ export default {
     },
     userStore,
   }),
+  created() {
+    this.redirectUser();
+  },
   methods: {
+    redirectUser() {
+      if (
+        Object.keys(this.userStore.user).length === 0 ||
+        this.userStore.user.admin === false
+      ) {
+        this.$router.push("/");
+      }
+    },
     submitForm() {
       if (this.formState.$valid) {
         fetch(`${apiProductos}/products`, {

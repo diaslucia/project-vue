@@ -3,7 +3,7 @@
     <div class="form">
       <vue-form
         :state="formState"
-        @submit.prevent.stop="submitForm"
+        @submit.prevent.stop="getUser"
         style="width: 100%"
       >
         <validate tag="label" class="label">
@@ -12,11 +12,19 @@
             name="name"
             type="text"
             v-model="model.name"
+            minlength="3"
+            maxlength="10"
             required
             placeholder="John Doe"
           />
           <field-messages name="name" show="$dirty && $touched || $submitted">
             <div slot="required" class="error">Field required</div>
+            <div slot="minlength" class="error">
+              Name should contain at least 3 characters
+            </div>
+            <div slot="maxlength" class="error">
+              Name needs to be less than 10 characters
+            </div>
           </field-messages>
         </validate>
 
@@ -31,6 +39,7 @@
           />
           <field-messages name="email" show="$dirty && $touched || $submitted">
             <div slot="required" class="error">Field required</div>
+            <div slot="email" class="error">Enter a valid email</div>
           </field-messages>
         </validate>
 
@@ -41,6 +50,7 @@
             type="text"
             v-model="model.password"
             required
+            minlength="6"
             placeholder="******"
           />
           <field-messages
@@ -48,9 +58,18 @@
             show="$dirty && $touched || $submitted"
           >
             <div slot="required" class="error">Field required</div>
+            <div slot="minlength" class="error">
+              Password should contain at least 6 characters
+            </div>
           </field-messages>
         </validate>
 
+        <p
+          :style="user ? { visibility: 'hidden' } : { visibility: 'visible' }"
+          class="error"
+        >
+          Email already registered
+        </p>
         <button type="submit" class="button">Register</button>
         <router-link :to="{ name: 'login' }">
           <p class="text">Log in</p>
@@ -75,8 +94,30 @@ export default {
     },
     spinner: true,
     userStore,
+    user: true,
   }),
   methods: {
+    async getUser() {
+      const userQuery = `${url}/users?email=${this.model.email}`;
+
+      fetch(`${userQuery}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data[0]) {
+            this.postUser();
+          } else {
+            this.user = false;
+          }
+        })
+        .finally(() => {
+          this.spinner = false;
+        });
+    },
     async postUser() {
       fetch(`${url}/users`, {
         method: "POST",

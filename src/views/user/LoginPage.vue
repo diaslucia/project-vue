@@ -37,7 +37,12 @@
           </field-messages>
         </validate>
 
-        <p v-if="!user">muy mal</p>
+        <p
+          :style="user ? { visibility: 'hidden' } : { visibility: 'visible' }"
+          class="error"
+        >
+          {{ errorMessage }}
+        </p>
         <button type="submit" class="button">Log in</button>
         <router-link :to="{ name: 'register' }">
           <p class="text">Register</p>
@@ -60,6 +65,7 @@ export default {
       password: "",
     },
     user: true,
+    errorMessage: "",
     spinner: true,
     userStore,
   }),
@@ -75,12 +81,18 @@ export default {
       })
         .then((res) => res.json())
         .then((data) => {
-          if (data[0].password === this.model.password) {
-            this.userStore.user = data[0];
-            this.user = true;
-            this.$router.push("/");
-          } else {
+          if (!data[0]) {
+            this.errorMessage = "User not found";
             this.user = false;
+          } else {
+            if (data[0].password === this.model.password) {
+              this.userStore.user = data[0];
+              this.user = true;
+              this.$router.push("/");
+            } else {
+              this.errorMessage = "Invalid password";
+              this.user = false;
+            }
           }
         })
         .finally(() => {
