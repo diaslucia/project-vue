@@ -108,27 +108,31 @@ export default {
       }
     },
     async getProduct() {
-      fetch(`${url}/products/${this.$route.params.id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          this.model = {
-            name: data.name,
-            description: data.description,
-            quantity: 1,
-            price: data.price,
-            image: data.image,
-          };
+      if (this.$route.params.id != "new-product") {
+        fetch(`${url}/products/${this.$route.params.id}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         })
-        .finally(() => {
-          this.spinner = false;
-        });
+          .then((res) => res.json())
+          .then((data) => {
+            this.model = {
+              name: data.name,
+              description: data.description,
+              quantity: 1,
+              price: data.price,
+              image: data.image,
+            };
+          })
+          .finally(() => {
+            this.spinner = false;
+          });
+      } else {
+        this.spinner = false;
+      }
     },
-    submitForm() {
+    updateProduct() {
       if (this.formState.$valid) {
         fetch(`${url}/products/${this.$route.params.id}`, {
           method: "PUT",
@@ -142,6 +146,29 @@ export default {
           .finally(() => {
             this.$router.push("/admin");
           });
+      }
+    },
+    addProduct() {
+      if (this.formState.$valid) {
+        fetch(`${url}/products`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ...this.model, subtotal: this.model.price }),
+        })
+          .then((res) => res.json())
+          .then((data) => console.log(data))
+          .finally(() => {
+            this.$router.push("/admin");
+          });
+      }
+    },
+    submitForm() {
+      if (this.$route.params.id === "new-product") {
+        this.addProduct();
+      } else {
+        this.updateProduct();
       }
     },
   },

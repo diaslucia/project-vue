@@ -1,7 +1,9 @@
 <template>
   <div>
     <TableProducts />
-    <router-link :to="{ name: 'new-product' }">
+    <router-link
+      :to="{ name: 'add-update-product', params: { id: 'new-product' } }"
+    >
       <button class="button">+</button>
     </router-link>
   </div>

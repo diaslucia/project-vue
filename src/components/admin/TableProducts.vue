@@ -79,7 +79,7 @@ export default {
         });
     },
     editProduct(id) {
-      this.$router.push(`/edit-product/${id}`);
+      this.$router.push(`/admin/product/${id}`);
     },
   },
 };
