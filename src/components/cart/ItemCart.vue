@@ -1,18 +1,24 @@
 <template>
-  <div class="card">
-    <img :src="product.image" :alt="product.name" class="img" />
-    <div class="innerContainer">
-      <h3 class="title">{{ product.name }}</h3>
-      <p class="price">{{ product.quantity }}</p>
-      <p class="price">subtotal: ${{ product.subtotal }}</p>
-    </div>
-    <ItemCount
-      :quantity="product.quantity"
-      @sub-product="subProduct"
-      @sum-product="sumProduct"
-    />
-    <button @click="deleteProduct">Delete</button>
-  </div>
+  <tr class="card">
+    <td class="center_td">
+      <img :src="product.image" :alt="product.name" class="img" />
+    </td>
+    <td class="title bigger_space">{{ product.name }}</td>
+    <td class="text center_td">US$ {{ product.price }}</td>
+    <td class="text">quantity: {{ product.quantity }}</td>
+    <td class="text">subtotal: US${{ product.subtotal }}</td>
+
+    <td class="center_td">
+      <ItemCount
+        :quantity="product.quantity"
+        @sub-product="subProduct"
+        @sum-product="sumProduct"
+      />
+    </td>
+    <td class="center_td">
+      <button @click="deleteProduct" class="delete">Delete</button>
+    </td>
+  </tr>
 </template>
 
 <script>
@@ -51,35 +57,54 @@ export default {
 </script>
 
 <style scoped>
+td {
+  width: 16%;
+  text-align: start;
+  border: none;
+}
+.center_td {
+  text-align: center !important;
+}
+
+.bigger_space {
+  width: 25%;
+}
 .card {
-  width: 250px;
-  height: 230px;
-  background-color: white;
-  border-radius: 10px;
+  width: 800px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  margin: 0 auto;
 }
 .img {
-  width: 250px;
-  height: 150px;
-  object-fit: cover;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-}
-.innerContainer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
 }
 .title {
-  font-size: 17px;
-  padding: 0 10px;
+  color: #171717;
+  font-size: 16px;
+  font-weight: bold;
 }
-.price {
+.text {
+  color: #171717;
   font-size: 14px;
-  padding: 0 10px;
+}
+.delete {
+  cursor: pointer;
+  background-color: rgb(185, 0, 0);
+  border: 0;
+  width: 80px;
+  border-radius: 4px;
+  color: white;
+  padding: 5px 0;
+}
+
+.buttonContainer {
+  display: flex;
+  width: 30%;
+  align-items: center;
+  justify-content: space-between;
 }
 </style>

@@ -1,37 +1,49 @@
 <template>
-  <div class="container">
-    <table>
-      <tbody>
-        <tr v-for="(product, i) in products" :key="i">
-          <td class="td">
-            <img :src="product.image" :alt="product.name" class="image" />
-          </td>
-          <td>{{ product.name | capitalize }}</td>
-          <td>U$S {{ product.price }}</td>
-          <td class="td">
-            <button class="button button_edit" @click="editProduct(product.id)">
-              Editar
-            </button>
-          </td>
-          <td class="td">
-            <button class="button" @click="deleteProduct(product.id)">
-              Eliminar
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div>
+    <SpinnerSpin v-if="spinner" />
+
+    <div class="container" v-else>
+      <table>
+        <tbody>
+          <tr v-for="(product, i) in products" :key="i">
+            <td class="image_td">
+              <img :src="product.image" :alt="product.name" class="image" />
+            </td>
+            <td>{{ product.name | capitalize }}</td>
+            <td>US$ {{ product.price }}</td>
+            <td class="td">
+              <button
+                class="button button_edit"
+                @click="editProduct(product.id)"
+              >
+                Editar
+              </button>
+            </td>
+            <td class="td">
+              <button class="button" @click="deleteProduct(product.id)">
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
 <script>
 const url = process.env.VUE_APP_MOCKAPI_URL;
+import SpinnerSpin from "@/components/SpinnerSpin.vue";
 
 export default {
   name: "TableProducts",
   data: () => ({
     products: [],
+    spinner: true,
   }),
+  components: {
+    SpinnerSpin,
+  },
   filters: {
     capitalize(string) {
       return string.replace(/\b\w/g, (first) => first.toUpperCase());
@@ -44,12 +56,14 @@ export default {
     async fetchData() {
       try {
         this.products = await (await fetch(`${url}/products`)).json();
+        this.spinner = false;
       } catch (err) {
         this.fetchError = "Error de conexión.";
         console.log(err);
       }
     },
     deleteProduct(id) {
+      this.spinner = true;
       fetch(`${url}/products/${id}`, {
         method: "DELETE",
         headers: {
@@ -59,10 +73,13 @@ export default {
         .then((res) => res.json())
         .then(() => {
           this.products = this.products.filter((prod) => prod.id != id);
+        })
+        .finally(() => {
+          this.spinner = false;
         });
     },
     editProduct(id) {
-      this.$router.push({ path: "/edit-product", params: { id: id } });
+      this.$router.push(`/edit-product/${id}`);
     },
   },
 };
@@ -74,7 +91,9 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 50px);
+  min-height: calc(100vh - 60px);
+  height: 100%;
+  padding: 100px 0;
 }
 
 table {
@@ -98,6 +117,9 @@ td {
   text-align: center;
 }
 
+.image_td {
+  width: 10%;
+}
 .row {
   border: none;
 }

@@ -2,10 +2,9 @@
   <router-link :to="{ name: 'detail', params: { id: product.id } }">
     <div class="card">
       <img :src="product.image" :alt="product.name" class="img" />
-      <div class="innerContainer">
-        <h3 class="title">{{ product.name }}</h3>
-        <p class="price">${{ product.price }} ud.</p>
-      </div>
+
+      <h3 class="title">{{ product.name }}</h3>
+      <p class="price">US$ {{ product.price }}</p>
     </div>
   </router-link>
 </template>
@@ -30,35 +29,27 @@ export default {
 </script>
 
 <style scoped>
+a {
+  text-decoration: none;
+  color: #171717;
+}
 .card {
-  width: 250px;
-  height: 230px;
-  background-color: white;
-  border-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  padding: 20px;
 }
 .img {
-  width: 250px;
+  width: 150px;
   height: 150px;
-  object-fit: cover;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-}
-.innerContainer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
+  object-fit: contain;
 }
 .title {
   font-size: 17px;
-  padding: 0 10px;
+  margin-bottom: 5px;
 }
 .price {
-  font-size: 14px;
-  padding: 0 10px;
+  font-size: 13px;
 }
 </style>

@@ -1,20 +1,19 @@
 <template>
   <div>
-    <SpinnerSpin v-if="spinner" />
-    <div class="form" v-else>
+    <div class="form">
       <vue-form
         :state="formState"
         @submit.prevent.stop="submitForm"
         style="width: 100%"
       >
         <validate tag="label" class="label">
-          <span>Name of product</span>
+          <span>Name</span>
           <input
             name="name"
             type="text"
             v-model="model.name"
             required
-            placeholder="Glazed donut"
+            placeholder="John Doe"
           />
           <field-messages name="name" show="$dirty && $touched || $submitted">
             <div slot="required" class="error">Field required</div>
@@ -22,98 +21,74 @@
         </validate>
 
         <validate tag="label" class="label">
-          <span>Description</span>
+          <span>Email</span>
           <input
-            name="description"
+            name="email"
             type="text"
-            v-model="model.description"
+            v-model="model.email"
             required
-            placeholder="Glazed donut"
+            placeholder="example@gmail.com"
+          />
+          <field-messages name="email" show="$dirty && $touched || $submitted">
+            <div slot="required" class="error">Field required</div>
+          </field-messages>
+        </validate>
+
+        <validate tag="label" class="label">
+          <span>Password</span>
+          <input
+            name="password"
+            type="text"
+            v-model="model.password"
+            required
+            placeholder="******"
           />
           <field-messages
-            name="description"
+            name="password"
             show="$dirty && $touched || $submitted"
           >
             <div slot="required" class="error">Field required</div>
           </field-messages>
         </validate>
 
-        <validate tag="label" class="label">
-          <span>Price</span>
-          <input
-            name="price"
-            type="number"
-            v-model="model.price"
-            required
-            placeholder="25"
-          />
-          <field-messages name="price" show="$dirty && $touched || $submitted">
-            <div slot="required" class="error">Field required</div>
-          </field-messages>
-        </validate>
-
-        <validate tag="label" class="label">
-          <span>URL image</span>
-          <input
-            name="image"
-            type="text"
-            v-model="model.image"
-            required
-            placeholder="https://image.com/132"
-          />
-          <field-messages name="image" show="$dirty && $touched || $submitted">
-            <div slot="required" class="error">Field required</div>
-          </field-messages>
-        </validate>
-
-        <button type="submit" class="button">Submit</button>
+        <button type="submit" class="button">Register</button>
+        <router-link :to="{ name: 'login' }">
+          <p class="text">Log in</p>
+        </router-link>
       </vue-form>
     </div>
   </div>
 </template>
 
 <script>
-import { userStore } from "@/store/userStore";
-import SpinnerSpin from "@/components/SpinnerSpin.vue";
 const url = process.env.VUE_APP_MOCKAPI_URL;
+import { userStore } from "@/store/userStore";
 
 export default {
-  name: "EditProductPage",
+  name: "RegisterPage",
   data: () => ({
     formState: {},
     model: {
       name: "",
-      description: "",
-      quantity: 1,
-      price: "",
-      image: "",
+      email: "",
+      password: "",
     },
-    userStore,
     spinner: true,
+    userStore,
   }),
-  components: {
-    SpinnerSpin,
-  },
-  created() {
-    this.getProduct();
-  },
   methods: {
-    async getProduct() {
-      fetch(`${url}/products/${this.$route.params.id}`, {
-        method: "GET",
+    async postUser() {
+      fetch(`${url}/users`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({ ...this.model, admin: false, order: [] }),
       })
         .then((res) => res.json())
         .then((data) => {
-          this.model = {
-            name: data.name,
-            description: data.description,
-            quantity: 1,
-            price: data.price,
-            image: data.image,
-          };
+          this.userStore.user = data;
+          this.$router.push("/");
         })
         .finally(() => {
           this.spinner = false;
@@ -121,18 +96,7 @@ export default {
     },
     submitForm() {
       if (this.formState.$valid) {
-        fetch(`${url}/products/${this.$route.params.id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ ...this.model, subtotal: this.model.price }),
-        })
-          .then((res) => res.json())
-          .then((data) => console.log(data))
-          .finally(() => {
-            this.$router.push("/admin");
-          });
+        this.postUser();
       }
     },
   },
@@ -196,5 +160,13 @@ input:focus {
 }
 .button:hover {
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.5);
+}
+
+.text {
+  margin-top: 15px;
+  color: #572e4f;
+  text-decoration: underline;
+  text-align: center;
+  font-size: 14px;
 }
 </style>

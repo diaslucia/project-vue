@@ -2,15 +2,19 @@
   <div class="card">
     <img :src="product.image" :alt="product.name" class="img" />
     <div class="innerContainer">
-      <h3 class="title">{{ product.name }}</h3>
+      <div class="textContainer">
+        <h3 class="title">{{ product.name }}</h3>
+        <p class="price">US${{ product.price }} ud.</p>
+      </div>
       <p class="text">{{ product.description }}</p>
-      <p class="price">${{ product.price }} ud.</p>
-      <ItemCount
-        :quantity="quantity"
-        @sub-product="substractProduct"
-        @sum-product="sumProduct"
-      />
-      <button @click="addCart">Add to cart</button>
+      <div class="buttonContainer">
+        <ItemCount
+          :quantity="quantity"
+          @sub-product="substractProduct"
+          @sum-product="sumProduct"
+        />
+        <button @click="addCart" class="button">Add to cart</button>
+      </div>
     </div>
   </div>
 </template>
@@ -55,7 +59,6 @@ export default {
 
 <style scoped>
 .card {
-  height: 230px;
   width: 800px;
   display: flex;
   flex-direction: row;
@@ -71,20 +74,48 @@ export default {
 .innerContainer {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: flex-start;
   width: 100%;
-  height: 100%;
+  height: 250px;
+}
+
+.textContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 70%;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
 }
 .title {
-  font-size: 17px;
+  font-size: 25px;
+  font-weight: bold;
+  color: #572e4f;
 }
 .price {
-  font-size: 14px;
+  font-size: 16px;
+  color: #572e4f;
 }
 
 .text {
-  font-size: 14px;
-  color: #2e354f;
+  font-size: 16px;
+  color: #171717;
+}
+
+.button {
+  border: none;
+  background-color: #027b7f;
+  color: white;
+  border-radius: 30px;
+  padding: 7px 15px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 0 10px;
 }
 </style>

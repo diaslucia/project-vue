@@ -115,7 +115,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: calc(100vh - 50px);
+  min-height: calc(100vh - 60px);
 }
 .label {
   width: 100%;

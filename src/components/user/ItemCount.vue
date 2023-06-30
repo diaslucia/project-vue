@@ -1,5 +1,5 @@
 <template>
-  <div class="buttonContainer">
+  <div class="buttonContainer_counter">
     <button class="button" @click="substractProduct">-</button>
     <p class="text">{{ quantity }}</p>
     <button class="button" @click="addProduct">+</button>
@@ -17,34 +17,26 @@ export default {
       this.$emit("sum-product");
     },
     substractProduct() {
-      this.$emit("sub-product");
+      if (this.quantity > 1) {
+        this.$emit("sub-product");
+      }
     },
   },
 };
 </script>
 
 <style scoped>
-.buttonContainer {
+.buttonContainer_counter {
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 0 10px;
+  justify-content: center;
+  align-items: center;
+  width: 120px;
 }
 
 .button {
   border: none;
-  background-color: rgb(115, 90, 138);
-  color: white;
-  border-radius: 30px;
-  padding: 7px 15px;
-  margin-bottom: 10px;
-  cursor: pointer;
-}
-
-.btnDelete,
-.button {
-  border: none;
-  background-color: rgb(115, 90, 138);
+  background-color: #572e4f;
   color: white;
   border-radius: 30px;
   padding: 7px 15px;
@@ -52,7 +44,8 @@ export default {
   margin: 0 10px;
 }
 
-.btnDelete {
-  background-color: rgb(71, 54, 86);
+.text {
+  font-size: 16px;
+  color: #171717;
 }
 </style>
