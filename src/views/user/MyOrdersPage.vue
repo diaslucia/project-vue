@@ -48,11 +48,6 @@ export default {
   data: () => ({
     userStore,
   }),
-  methods: {
-    getOrder(product) {
-      console.log(product);
-    },
-  },
 };
 </script>
 

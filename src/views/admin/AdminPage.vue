@@ -26,10 +26,7 @@ export default {
   },
   methods: {
     redirectUser() {
-      if (
-        Object.keys(this.userStore.user).length === 0 ||
-        this.userStore.user.admin === false
-      ) {
+      if (!this.userStore.isAdmin()) {
         this.$router.push("/");
       }
     },

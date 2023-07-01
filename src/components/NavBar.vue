@@ -33,15 +33,7 @@
           <p class="dropdown_text" @click="logOut">Log out</p>
         </div>
       </li>
-      <li
-        class="link"
-        :style="
-          Object.keys(this.userStore.user).length != 0 &&
-          this.userStore.user.admin
-            ? { visibility: 'hidden' }
-            : { visibility: 'visible' }
-        "
-      >
+      <li class="link" :style="{ visibility }">
         <router-link :to="{ name: 'cart' }"
           ><font-awesome-icon icon="fa-solid fa-cart-shopping" class="icon" />
         </router-link>
@@ -65,13 +57,18 @@ export default {
     total: 0,
     dropdown: false,
   }),
+  computed: {
+    visibility() {
+      return this.userStore.isAdmin() ? "hidden" : "visible";
+    },
+  },
   methods: {
     handleDropdown() {
       this.dropdown = !this.dropdown;
     },
     logOut() {
       this.dropdown = !this.dropdown;
-      this.userStore.user = {};
+      this.userStore.logOut();
       this.$router.push("/login");
     },
     goTo(link) {

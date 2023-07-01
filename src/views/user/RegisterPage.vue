@@ -32,7 +32,7 @@
           <span>Email</span>
           <input
             name="email"
-            type="text"
+            type="email"
             v-model="model.email"
             required
             placeholder="example@gmail.com"
@@ -47,7 +47,7 @@
           <span>Password</span>
           <input
             name="password"
-            type="text"
+            type="password"
             v-model="model.password"
             required
             minlength="6"
@@ -64,11 +64,8 @@
           </field-messages>
         </validate>
 
-        <p
-          :style="user ? { visibility: 'hidden' } : { visibility: 'visible' }"
-          class="error"
-        >
-          Email already registered
+        <p :style="{ visibility }" class="error">
+          class="error" > Email already registered
         </p>
         <button type="submit" class="button">Register</button>
         <router-link :to="{ name: 'login' }">
@@ -96,27 +93,34 @@ export default {
     userStore,
     user: true,
   }),
+  computed: {
+    visibility() {
+      return this.user ? "hidden" : "visible";
+    },
+  },
   methods: {
     async getUser() {
-      const userQuery = `${url}/users?email=${this.model.email}`;
+      if (this.formState.$valid) {
+        const userQuery = `${url}/users?email=${this.model.email}`;
 
-      fetch(`${userQuery}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (!data[0]) {
-            this.postUser();
-          } else {
-            this.user = false;
-          }
+        fetch(`${userQuery}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         })
-        .finally(() => {
-          this.spinner = false;
-        });
+          .then((res) => res.json())
+          .then((data) => {
+            if (!data[0]) {
+              this.postUser();
+            } else {
+              this.user = false;
+            }
+          })
+          .finally(() => {
+            this.spinner = false;
+          });
+      }
     },
     async postUser() {
       fetch(`${url}/users`, {
@@ -128,7 +132,7 @@ export default {
       })
         .then((res) => res.json())
         .then((data) => {
-          this.userStore.user = data;
+          this.userStore.setUser(data);
           this.$router.push("/");
         })
         .finally(() => {

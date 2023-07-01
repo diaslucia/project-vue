@@ -37,10 +37,7 @@
           </field-messages>
         </validate>
 
-        <p
-          :style="user ? { visibility: 'hidden' } : { visibility: 'visible' }"
-          class="error"
-        >
+        <p :style="{ visibility }" class="error">
           {{ errorMessage }}
         </p>
         <button type="submit" class="button">Log in</button>
@@ -69,6 +66,11 @@ export default {
     spinner: true,
     userStore,
   }),
+  computed: {
+    visibility() {
+      return this.user ? "hidden" : "visible";
+    },
+  },
   methods: {
     async getUser() {
       const userQuery = `${url}/users?email=${this.model.email}`;

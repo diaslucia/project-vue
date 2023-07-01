@@ -19,8 +19,11 @@
 <script>
 import ItemCard from "@/components/user/ItemCard.vue";
 import SpinnerSpin from "@/components/SpinnerSpin.vue";
+
+import get from "@/services/fetchHelper.js";
+
 import { userStore } from "@/store/userStore";
-const apiProductos = process.env.VUE_APP_MOCKAPI_URL;
+const url = process.env.VUE_APP_MOCKAPI_URL;
 
 export default {
   name: "HomePage",
@@ -35,24 +38,21 @@ export default {
     spinner: true,
   }),
   created() {
-    this.fetchData(apiProductos);
-    this.getUser();
+    this.fetchData();
+    this.redirectUser();
   },
   methods: {
-    async fetchData(url) {
+    async fetchData() {
       try {
-        this.products = await (await fetch(`${url}/products`)).json();
+        this.products = await get(url);
         this.spinner = false;
       } catch (err) {
         this.fetchError = "Error";
         console.log(err);
       }
     },
-    getUser() {
-      if (
-        Object.keys(this.userStore.user).length != 0 &&
-        this.userStore.user.admin
-      ) {
+    redirectUser() {
+      if (this.userStore.isAdmin()) {
         this.$router.push("/admin");
       }
     },

@@ -41,4 +41,8 @@ export const cartStore = {
     let filteredProducts = this.cart.filter((prod) => prod.id != product.id);
     this.cart = filteredProducts;
   },
+
+  emptyCart() {
+    this.cart = [];
+  },
 };

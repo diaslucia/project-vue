@@ -46,7 +46,8 @@ export default {
   }),
   methods: {
     buyCart() {
-      if (Object.keys(this.userStore.user).length != 0) {
+      console.log(this.userStore.loggedIn());
+      if (this.userStore.loggedIn()) {
         const timestamp = getTimeStamp();
         const total = this.cartStore.cartTotalPrice();
 
@@ -66,7 +67,7 @@ export default {
           body: JSON.stringify(this.userStore.user),
         })
           .then((res) => res.json())
-          .then(() => (this.cartStore.cart = []))
+          .then(() => this.cartStore.emptyCart())
           .finally(() => {
             this.$router.push("/");
           });
