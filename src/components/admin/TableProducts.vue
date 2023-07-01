@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import { fetchHelper } from "@/services/fetchHelper.js";
 const url = process.env.VUE_APP_MOCKAPI_URL;
 import SpinnerSpin from "@/components/SpinnerSpin.vue";
 
@@ -55,28 +56,23 @@ export default {
   methods: {
     async fetchData() {
       try {
-        this.products = await (await fetch(`${url}/products`)).json();
+        this.products = await fetchHelper.get(`${url}/products`);
         this.spinner = false;
       } catch (err) {
-        this.fetchError = "Error de conexión.";
         console.log(err);
       }
     },
-    deleteProduct(id) {
+    async deleteProduct(id) {
       this.spinner = true;
-      fetch(`${url}/products/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then(() => {
-          this.products = this.products.filter((prod) => prod.id != id);
-        })
-        .finally(() => {
-          this.spinner = false;
-        });
+
+      try {
+        await fetchHelper.delete(`${url}/products/${id}`);
+        this.products = this.products.filter((prod) => prod.id != id);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        this.spinner = false;
+      }
     },
     editProduct(id) {
       this.$router.push(`/admin/product/${id}`);

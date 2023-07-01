@@ -51,6 +51,7 @@
 
 <script>
 const url = process.env.VUE_APP_MOCKAPI_URL;
+import { fetchHelper } from "@/services/fetchHelper.js";
 import { userStore } from "@/store/userStore";
 
 export default {
@@ -75,31 +76,26 @@ export default {
     async getUser() {
       const userQuery = `${url}/users?email=${this.model.email}`;
 
-      fetch(`${userQuery}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (!data[0]) {
-            this.errorMessage = "User not found";
-            this.user = false;
+      try {
+        let data = await fetchHelper.get(userQuery);
+        if (!data[0]) {
+          this.errorMessage = "User not found";
+          this.user = false;
+        } else {
+          if (data[0].password === this.model.password) {
+            this.userStore.user = data[0];
+            this.user = true;
+            this.$router.push("/");
           } else {
-            if (data[0].password === this.model.password) {
-              this.userStore.user = data[0];
-              this.user = true;
-              this.$router.push("/");
-            } else {
-              this.errorMessage = "Invalid password";
-              this.user = false;
-            }
+            this.errorMessage = "Invalid password";
+            this.user = false;
           }
-        })
-        .finally(() => {
-          this.spinner = false;
-        });
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        this.spinner = false;
+      }
     },
     submitForm() {
       if (this.formState.$valid) {

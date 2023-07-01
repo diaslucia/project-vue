@@ -39,6 +39,7 @@
 <script>
 const url = process.env.VUE_APP_MOCKAPI_URL;
 import { userStore } from "@/store/userStore";
+import { fetchHelper } from "@/services/fetchHelper.js";
 import SpinnerSpin from "@/components/SpinnerSpin.vue";
 
 export default {
@@ -64,10 +65,9 @@ export default {
     },
     async fetchData() {
       try {
-        this.users = await (await fetch(`${url}/users`)).json();
+        this.users = await fetchHelper.get(`${url}/users`);
         this.spinner = false;
       } catch (err) {
-        this.fetchError = "Error";
         console.log(err);
       }
     },

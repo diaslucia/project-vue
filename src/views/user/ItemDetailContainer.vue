@@ -8,7 +8,8 @@
 <script>
 import ItemDetail from "../../components/user/ItemDetail.vue";
 import SpinnerSpin from "@/components/SpinnerSpin.vue";
-const apiProductos = process.env.VUE_APP_MOCKAPI_URL;
+import { fetchHelper } from "@/services/fetchHelper.js";
+const url = process.env.VUE_APP_MOCKAPI_URL;
 
 export default {
   name: "ItemDetailContainer",
@@ -18,21 +19,19 @@ export default {
   },
   data: () => ({
     product: {},
-    fetchError: "",
     spinner: true,
   }),
   created() {
-    this.fetchDetail(apiProductos);
+    this.fetchDetail();
   },
   methods: {
-    async fetchDetail(url) {
+    async fetchDetail() {
       try {
-        this.product = await (
-          await fetch(`${url}/products/${this.$route.params.id}`)
-        ).json();
+        this.product = await fetchHelper.get(
+          `${url}/products/${this.$route.params.id}`
+        );
         this.spinner = false;
       } catch (err) {
-        this.fetchError = "Error de conexión.";
         console.log(err);
       }
     },

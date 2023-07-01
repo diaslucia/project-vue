@@ -33,6 +33,7 @@ import ItemCart from "@/components/cart/ItemCart.vue";
 import { cartStore } from "@/store/cartStore";
 import { userStore } from "@/store/userStore";
 import { getTimeStamp } from "@/utils/helper.js";
+import { fetchHelper } from "@/services/fetchHelper.js";
 const url = process.env.VUE_APP_MOCKAPI_URL;
 
 export default {
@@ -45,8 +46,7 @@ export default {
     userStore,
   }),
   methods: {
-    buyCart() {
-      console.log(this.userStore.loggedIn());
+    async buyCart() {
       if (this.userStore.loggedIn()) {
         const timestamp = getTimeStamp();
         const total = this.cartStore.cartTotalPrice();
@@ -59,18 +59,17 @@ export default {
 
         this.userStore.user.order.push(newOrder);
 
-        fetch(`${url}/users/${this.userStore.user.id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(this.userStore.user),
-        })
-          .then((res) => res.json())
-          .then(() => this.cartStore.emptyCart())
-          .finally(() => {
-            this.$router.push("/");
-          });
+        try {
+          await fetchHelper.put(
+            `${url}/users/${this.userStore.user.id}`,
+            this.userStore.user
+          );
+          this.cartStore.emptyCart();
+        } catch (err) {
+          console.log(err);
+        } finally {
+          this.$router.push("/");
+        }
       } else {
         this.$router.push("/login");
       }

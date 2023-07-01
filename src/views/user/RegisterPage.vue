@@ -78,6 +78,7 @@
 
 <script>
 const url = process.env.VUE_APP_MOCKAPI_URL;
+import { fetchHelper } from "@/services/fetchHelper.js";
 import { userStore } from "@/store/userStore";
 
 export default {
@@ -102,42 +103,34 @@ export default {
     async getUser() {
       if (this.formState.$valid) {
         const userQuery = `${url}/users?email=${this.model.email}`;
-
-        fetch(`${userQuery}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            if (!data[0]) {
-              this.postUser();
-            } else {
-              this.user = false;
-            }
-          })
-          .finally(() => {
-            this.spinner = false;
-          });
+        try {
+          let data = await fetchHelper.get(userQuery);
+          if (!data[0]) {
+            this.postUser();
+          } else {
+            this.user = false;
+          }
+        } catch (err) {
+          console.log(err);
+        } finally {
+          this.spinner = false;
+        }
       }
     },
     async postUser() {
-      fetch(`${url}/users`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...this.model, admin: false, order: [] }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          this.userStore.setUser(data);
-          this.$router.push("/");
-        })
-        .finally(() => {
-          this.spinner = false;
+      try {
+        let data = await fetchHelper.post(`${url}/users`, {
+          ...this.model,
+          admin: false,
+          order: [],
         });
+        this.userStore.setUser(data);
+        this.$router.push("/");
+      } catch (err) {
+        console.log(err);
+      } finally {
+        this.spinner = false;
+      }
     },
     submitForm() {
       if (this.formState.$valid) {

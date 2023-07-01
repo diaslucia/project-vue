@@ -75,6 +75,7 @@
 <script>
 import { userStore } from "@/store/userStore";
 import SpinnerSpin from "@/components/SpinnerSpin.vue";
+import { fetchHelper } from "@/services/fetchHelper.js";
 const url = process.env.VUE_APP_MOCKAPI_URL;
 
 export default {
@@ -106,59 +107,54 @@ export default {
     },
     async getProduct() {
       if (this.$route.params.id != "new-product") {
-        fetch(`${url}/products/${this.$route.params.id}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            this.model = {
-              name: data.name,
-              description: data.description,
-              quantity: 1,
-              price: data.price,
-              image: data.image,
-            };
-          })
-          .finally(() => {
-            this.spinner = false;
-          });
+        try {
+          let data = await fetchHelper.get(
+            `${url}/products/${this.$route.params.id}`
+          );
+          this.model = {
+            name: data.name,
+            description: data.description,
+            quantity: 1,
+            price: data.price,
+            image: data.image,
+          };
+
+          this.spinner = false;
+        } catch (err) {
+          console.log(err);
+        } finally {
+          this.spinner = false;
+        }
       } else {
         this.spinner = false;
       }
     },
-    updateProduct() {
+    async updateProduct() {
       if (this.formState.$valid) {
-        fetch(`${url}/products/${this.$route.params.id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ ...this.model, subtotal: this.model.price }),
-        })
-          .then((res) => res.json())
-          .then((data) => console.log(data))
-          .finally(() => {
-            this.$router.push("/admin");
-          });
+        try {
+          this.products = await fetchHelper.put(
+            `${url}/products/${this.$route.params.id}`,
+            { ...this.model, subtotal: this.model.price }
+          );
+        } catch (err) {
+          console.log(err);
+        } finally {
+          this.$router.push("/admin");
+        }
       }
     },
-    addProduct() {
+    async addProduct() {
       if (this.formState.$valid) {
-        fetch(`${url}/products`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ ...this.model, subtotal: this.model.price }),
-        })
-          .then((res) => res.json())
-          .then((data) => console.log(data))
-          .finally(() => {
-            this.$router.push("/admin");
+        try {
+          this.products = await fetchHelper.post(`${url}/products`, {
+            ...this.model,
+            subtotal: this.model.price,
           });
+        } catch (err) {
+          console.log(err);
+        } finally {
+          this.$router.push("/admin");
+        }
       }
     },
     submitForm() {
