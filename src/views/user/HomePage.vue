@@ -20,7 +20,7 @@
 import ItemCard from "@/components/user/ItemCard.vue";
 import SpinnerSpin from "@/components/SpinnerSpin.vue";
 
-import get from "@/services/fetchHelper.js";
+import { fetchHelper } from "@/services/fetchHelper.js";
 
 import { userStore } from "@/store/userStore";
 const url = process.env.VUE_APP_MOCKAPI_URL;
@@ -44,7 +44,7 @@ export default {
   methods: {
     async fetchData() {
       try {
-        this.products = await get(url);
+        this.products = await fetchHelper.get(url);
         this.spinner = false;
       } catch (err) {
         this.fetchError = "Error";

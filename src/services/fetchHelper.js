@@ -1,6 +1,6 @@
 const headers = { "Content-Type": "application/json" };
 
-export default {
+export const fetchHelper = {
   error: null,
 
   async get(url) {
