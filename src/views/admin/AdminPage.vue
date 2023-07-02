@@ -23,7 +23,7 @@ export default {
   },
   methods: {
     redirectUser() {
-      if (this.isAdmin) {
+      if (!this.isAdmin) {
         this.$router.push("/");
       }
     },

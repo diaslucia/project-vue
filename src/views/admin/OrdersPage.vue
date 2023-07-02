@@ -2,7 +2,7 @@
   <div>
     <SpinnerSpin v-if="getLoading" />
     <div class="container" v-else>
-      <div v-for="(user, i) in getUser" :key="i">
+      <div v-for="(user, i) in getUsers" :key="i">
         <div v-if="user.order.length > 0">
           <div class="userContainer">
             <p>{{ user.name }}</p>
@@ -51,7 +51,7 @@ export default {
   },
   methods: {
     redirectUser() {
-      if (this.isAdmin) {
+      if (!this.isAdmin) {
         this.$router.push("/");
       }
     },
@@ -60,7 +60,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters("user", ["getUser", "getLoading", "isAdmin"]),
+    ...mapGetters("user", ["getUsers", "getLoading", "isAdmin"]),
   },
 };
 </script>
