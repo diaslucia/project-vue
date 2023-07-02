@@ -3,7 +3,7 @@
     <div class="form">
       <vue-form
         :state="formState"
-        @submit.prevent.stop="getUser"
+        @submit.prevent.stop="submitForm"
         style="width: 100%"
       >
         <validate tag="label" class="label">
@@ -64,9 +64,7 @@
           </field-messages>
         </validate>
 
-        <p :style="{ visibility }" class="error">
-          class="error" > Email already registered
-        </p>
+        <p :style="{ visibility }" class="error">{{ getErrorMessage }}</p>
         <button type="submit" class="button">Register</button>
         <router-link :to="{ name: 'login' }">
           <p class="text">Log in</p>
@@ -77,9 +75,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 const url = process.env.VUE_APP_MOCKAPI_URL;
-import { fetchHelper } from "@/services/fetchHelper.js";
-import { userStore } from "@/store/userStore";
 
 export default {
   name: "RegisterPage",
@@ -90,51 +87,26 @@ export default {
       email: "",
       password: "",
     },
-    spinner: true,
-    userStore,
-    user: true,
   }),
   computed: {
     visibility() {
-      return this.user ? "hidden" : "visible";
+      return this.getIsUser ? "hidden" : "visible";
     },
+    ...mapGetters("user", ["getIsUser", "getErrorMessage"]),
   },
   methods: {
-    async getUser() {
+    async submitForm() {
       if (this.formState.$valid) {
         const userQuery = `${url}/users?email=${this.model.email}`;
-        try {
-          let data = await fetchHelper.get(userQuery);
-          if (!data[0]) {
-            this.postUser();
-          } else {
-            this.user = false;
-          }
-        } catch (err) {
-          console.log(err);
-        } finally {
-          this.spinner = false;
+        let res = await this.$store.dispatch(
+          "user/getUserRegisterAction",
+          userQuery
+        );
+        // Si no encuentra un usuario, lo guarda
+        if (res) {
+          await this.$store.dispatch("user/postUserAction", this.model);
+          this.$router.push("/");
         }
-      }
-    },
-    async postUser() {
-      try {
-        let data = await fetchHelper.post(`${url}/users`, {
-          ...this.model,
-          admin: false,
-          order: [],
-        });
-        this.userStore.setUser(data);
-        this.$router.push("/");
-      } catch (err) {
-        console.log(err);
-      } finally {
-        this.spinner = false;
-      }
-    },
-    submitForm() {
-      if (this.formState.$valid) {
-        this.postUser();
       }
     },
   },

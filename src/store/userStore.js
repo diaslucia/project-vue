@@ -6,8 +6,7 @@ export const userStore = {
   },
 
   loggedIn() {
-    /* return  !!this.user */ // me da mal el dato
-    return Object.keys(this.user).length != 0;
+    return !!this.user.id;
   },
 
   isAdmin() {

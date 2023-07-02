@@ -1,8 +1,8 @@
 <template>
   <div>
-    <SpinnerSpin v-if="spinner" />
+    <SpinnerSpin v-if="getLoading" />
     <div class="container" v-else>
-      <div v-for="(user, i) in this.users" :key="i">
+      <div v-for="(user, i) in getUser" :key="i">
         <div v-if="user.order.length > 0">
           <div class="userContainer">
             <p>{{ user.name }}</p>
@@ -37,19 +37,11 @@
 </template>
 
 <script>
-const url = process.env.VUE_APP_MOCKAPI_URL;
-import { userStore } from "@/store/userStore";
-import { fetchHelper } from "@/services/fetchHelper.js";
 import SpinnerSpin from "@/components/SpinnerSpin.vue";
+import { mapGetters } from "vuex";
 
 export default {
   name: "OrdersPage",
-  data: () => ({
-    users: [],
-    orders: [],
-    spinner: true,
-    userStore,
-  }),
   components: {
     SpinnerSpin,
   },
@@ -59,18 +51,16 @@ export default {
   },
   methods: {
     redirectUser() {
-      if (!this.userStore.isAdmin()) {
+      if (this.isAdmin) {
         this.$router.push("/");
       }
     },
     async fetchData() {
-      try {
-        this.users = await fetchHelper.get(`${url}/users`);
-        this.spinner = false;
-      } catch (err) {
-        console.log(err);
-      }
+      this.$store.dispatch("user/fetchUsersAction");
     },
+  },
+  computed: {
+    ...mapGetters("user", ["getUser", "getLoading", "isAdmin"]),
   },
 };
 </script>

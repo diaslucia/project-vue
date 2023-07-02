@@ -37,9 +37,7 @@
           </field-messages>
         </validate>
 
-        <p :style="{ visibility }" class="error">
-          {{ errorMessage }}
-        </p>
+        <p :style="{ visibility }" class="error">{{ getErrorMessage }}</p>
         <button type="submit" class="button">Log in</button>
         <router-link :to="{ name: 'register' }">
           <p class="text">Register</p>
@@ -51,8 +49,7 @@
 
 <script>
 const url = process.env.VUE_APP_MOCKAPI_URL;
-import { fetchHelper } from "@/services/fetchHelper.js";
-import { userStore } from "@/store/userStore";
+import { mapGetters } from "vuex";
 
 export default {
   name: "LoginPage",
@@ -62,44 +59,22 @@ export default {
       email: "",
       password: "",
     },
-    user: true,
-    errorMessage: "",
-    spinner: true,
-    userStore,
   }),
   computed: {
     visibility() {
-      return this.user ? "hidden" : "visible";
+      return this.getIsUser ? "hidden" : "visible";
     },
+    ...mapGetters("user", ["getErrorMessage", "getIsUser"]),
   },
   methods: {
-    async getUser() {
-      const userQuery = `${url}/users?email=${this.model.email}`;
-
-      try {
-        let data = await fetchHelper.get(userQuery);
-        if (!data[0]) {
-          this.errorMessage = "User not found";
-          this.user = false;
-        } else {
-          if (data[0].password === this.model.password) {
-            this.userStore.user = data[0];
-            this.user = true;
-            this.$router.push("/");
-          } else {
-            this.errorMessage = "Invalid password";
-            this.user = false;
-          }
-        }
-      } catch (err) {
-        console.log(err);
-      } finally {
-        this.spinner = false;
-      }
-    },
-    submitForm() {
+    async submitForm() {
       if (this.formState.$valid) {
-        this.getUser();
+        const userQuery = `${url}/users?email=${this.model.email}`;
+        let res = await this.$store.dispatch("user/getUserLogInAction", [
+          userQuery,
+          this.model.password,
+        ]);
+        if (res) this.$router.push("/");
       }
     },
   },

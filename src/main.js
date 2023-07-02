@@ -1,6 +1,7 @@
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
+import store from "./store";
 import VueForm from "vue-form";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -14,6 +15,7 @@ Vue.config.productionTip = false;
 Vue.use(VueForm);
 
 new Vue({
+  store,
   router,
   render: (h) => h(App),
 }).$mount("#app");

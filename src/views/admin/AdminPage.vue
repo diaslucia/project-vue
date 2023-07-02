@@ -11,6 +11,7 @@
 
 <script>
 import { userStore } from "@/store/userStore";
+import { mapGetters } from "vuex";
 import TableProducts from "@/components/admin/TableProducts.vue";
 
 export default {
@@ -26,10 +27,13 @@ export default {
   },
   methods: {
     redirectUser() {
-      if (!this.userStore.isAdmin()) {
+      if (this.isAdmin) {
         this.$router.push("/");
       }
     },
+  },
+  computed: {
+    ...mapGetters("user", ["isAdmin"]),
   },
 };
 </script>

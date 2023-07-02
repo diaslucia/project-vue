@@ -76,6 +76,7 @@
 import { userStore } from "@/store/userStore";
 import SpinnerSpin from "@/components/SpinnerSpin.vue";
 import { fetchHelper } from "@/services/fetchHelper.js";
+import { mapGetters } from "vuex";
 const url = process.env.VUE_APP_MOCKAPI_URL;
 
 export default {
@@ -99,9 +100,12 @@ export default {
     this.getProduct();
     this.redirectUser();
   },
+  computed: {
+    ...mapGetters("user", ["isAdmin"]),
+  },
   methods: {
     redirectUser() {
-      if (!this.userStore.isAdmin()) {
+      if (this.isAdmin) {
         this.$router.push("/");
       }
     },
