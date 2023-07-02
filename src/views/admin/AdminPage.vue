@@ -10,7 +10,6 @@
 </template>
 
 <script>
-import { userStore } from "@/store/userStore";
 import { mapGetters } from "vuex";
 import TableProducts from "@/components/admin/TableProducts.vue";
 
@@ -19,9 +18,6 @@ export default {
   components: {
     TableProducts,
   },
-  data: () => ({
-    userStore,
-  }),
   created() {
     this.redirectUser();
   },

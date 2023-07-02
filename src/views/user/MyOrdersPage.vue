@@ -1,16 +1,12 @@
 <template>
   <div>
-    <div class="emptyContainer" v-if="this.userStore.user.order.length === 0">
+    <div class="emptyContainer" v-if="getUser.order.length === 0">
       <p class="textEmpty">You don't have orders</p>
     </div>
 
     <div class="container" v-else>
       <div class="innerContainer">
-        <div
-          v-for="(order, i) in this.userStore.user.order"
-          :key="i"
-          class="firstTable"
-        >
+        <div v-for="(order, i) in getUser.order" :key="i" class="firstTable">
           <div class="textContainer">
             <p class="orderNumber">Order {{ i + 1 }}</p>
             <p class="timestamp">
@@ -41,13 +37,13 @@
 </template>
 
 <script>
-import { userStore } from "@/store/userStore";
+import { mapGetters } from "vuex";
 
 export default {
   name: "MyOrdersPage",
-  data: () => ({
-    userStore,
-  }),
+  computed: {
+    ...mapGetters("user", ["getUser"]),
+  },
 };
 </script>
 

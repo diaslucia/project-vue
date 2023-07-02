@@ -6,7 +6,7 @@
           ><img src="@/assets/logo.png" class="logo"
         /></router-link>
       </li>
-      <li class="link" v-if="Object.keys(this.userStore.user).length === 0">
+      <li class="link" v-if="!loggedIn">
         <router-link :to="{ name: 'login' }">
           <font-awesome-icon icon="fa-solid fa-user" class="icon"
         /></router-link>
@@ -20,7 +20,7 @@
         <div class="dropdown" v-if="dropdown">
           <p
             @click="goTo('/orders')"
-            v-if="this.userStore.user.admin"
+            v-if="getUser.admin"
             class="dropdown_text"
           >
             Orders
@@ -47,20 +47,20 @@
 
 <script>
 import { cartStore } from "@/store/cartStore";
-import { userStore } from "@/store/userStore";
+import { mapGetters } from "vuex";
 
 export default {
   name: "NavBar",
   data: () => ({
     cartStore,
-    userStore,
     total: 0,
     dropdown: false,
   }),
   computed: {
     visibility() {
-      return this.userStore.isAdmin() ? "hidden" : "visible";
+      return this.isAdmin ? "hidden" : "visible";
     },
+    ...mapGetters("user", ["isAdmin", "loggedIn", "getUser"]),
   },
   methods: {
     handleDropdown() {
@@ -68,7 +68,7 @@ export default {
     },
     logOut() {
       this.dropdown = !this.dropdown;
-      this.userStore.logOut();
+      this.$store.dispatch("user/logOutAction");
       this.$router.push("/login");
     },
     goTo(link) {

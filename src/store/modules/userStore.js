@@ -41,7 +41,7 @@ export const userModule = {
       state.user = payload;
     },
     setUsers(state, payload) {
-      state.user = payload;
+      state.users = payload;
     },
     setLoading(state, payload) {
       state.loading = payload;
