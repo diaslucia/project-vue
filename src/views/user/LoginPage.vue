@@ -39,8 +39,8 @@
 
         <p :style="{ visibility }" class="error">{{ getErrorMessage }}</p>
         <button type="submit" class="button">Log in</button>
-        <router-link :to="{ name: 'register' }">
-          <p class="text">Register</p>
+        <router-link :to="{ name: 'signup' }">
+          <p class="text">Sign Up</p>
         </router-link>
       </vue-form>
     </div>

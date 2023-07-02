@@ -22,6 +22,7 @@ import SpinnerSpin from "@/components/SpinnerSpin.vue";
 import { fetchHelper } from "@/services/fetchHelper.js";
 import { userStore } from "@/store/userStore";
 const url = process.env.VUE_APP_MOCKAPI_URL;
+import { mapGetters } from "vuex";
 
 export default {
   name: "HomePage",
@@ -39,6 +40,9 @@ export default {
     this.fetchData();
     this.redirectUser();
   },
+  computed: {
+    ...mapGetters("user", ["isAdmin"]),
+  },
   methods: {
     async fetchData() {
       try {
@@ -50,7 +54,7 @@ export default {
       }
     },
     redirectUser() {
-      if (this.userStore.isAdmin()) {
+      if (this.isAdmin) {
         this.$router.push("/admin");
       }
     },

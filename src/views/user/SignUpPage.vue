@@ -79,7 +79,7 @@ import { mapGetters } from "vuex";
 const url = process.env.VUE_APP_MOCKAPI_URL;
 
 export default {
-  name: "RegisterPage",
+  name: "SignUpPage",
   data: () => ({
     formState: {},
     model: {
@@ -99,7 +99,7 @@ export default {
       if (this.formState.$valid) {
         const userQuery = `${url}/users?email=${this.model.email}`;
         let res = await this.$store.dispatch(
-          "user/getUserRegisterAction",
+          "user/getUserSignUpAction",
           userQuery
         );
         // Si no encuentra un usuario, lo guarda

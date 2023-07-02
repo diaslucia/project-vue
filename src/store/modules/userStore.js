@@ -70,7 +70,7 @@ export const userModule = {
         console.log(err);
       }
     },
-    getUserRegisterAction: async (context, payload) => {
+    getUserSignUpAction: async (context, payload) => {
       try {
         let data = await fetchHelper.get(payload);
         if (data[0]) {
