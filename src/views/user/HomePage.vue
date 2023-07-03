@@ -20,7 +20,6 @@
 import ItemCard from "@/components/user/ItemCard.vue";
 import SpinnerSpin from "@/components/SpinnerSpin.vue";
 import { fetchHelper } from "@/services/fetchHelper.js";
-import { userStore } from "@/store/userStore";
 const url = process.env.VUE_APP_MOCKAPI_URL;
 import { mapGetters } from "vuex";
 
@@ -33,7 +32,6 @@ export default {
   data: () => ({
     products: [],
     fetchError: "",
-    userStore,
     spinner: true,
   }),
   created() {

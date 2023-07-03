@@ -14,15 +14,11 @@
       </tbody>
     </table>
 
-    <p class="total" v-if="this.cartStore.cart.length != 0">
+    <p class="total" v-if="this.cartStore.cart.length">
       Total:
       <span class="total_span"> US${{ this.cartStore.cartTotalPrice() }}</span>
     </p>
-    <button
-      class="button"
-      v-if="this.cartStore.cart.length != 0"
-      @click="buyCart"
-    >
+    <button class="button" v-if="this.cartStore.cart.length" @click="buyCart">
       Buy
     </button>
   </div>
@@ -31,9 +27,9 @@
 <script>
 import ItemCart from "@/components/cart/ItemCart.vue";
 import { cartStore } from "@/store/cartStore";
-import { userStore } from "@/store/userStore";
 import { getTimeStamp } from "@/utils/helper.js";
 import { fetchHelper } from "@/services/fetchHelper.js";
+import { mapGetters } from "vuex";
 const url = process.env.VUE_APP_MOCKAPI_URL;
 
 export default {
@@ -43,11 +39,13 @@ export default {
   },
   data: () => ({
     cartStore,
-    userStore,
   }),
+  computed: {
+    ...mapGetters("user", ["loggedIn"]),
+  },
   methods: {
     async buyCart() {
-      if (this.userStore.loggedIn()) {
+      if (this.loggedIn) {
         const timestamp = getTimeStamp();
         const total = this.cartStore.cartTotalPrice();
 
@@ -56,13 +54,12 @@ export default {
           total: total,
           products: [...this.cartStore.cart],
         };
-
-        this.userStore.user.order.push(newOrder);
+        this.$store.dispatch("user/pushOrderAction", newOrder);
 
         try {
           await fetchHelper.put(
-            `${url}/users/${this.userStore.user.id}`,
-            this.userStore.user
+            `${url}/users/${this.$store.user.id}`,
+            this.$store.user
           );
           this.cartStore.emptyCart();
         } catch (err) {

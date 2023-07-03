@@ -52,6 +52,9 @@ export const userModule = {
     setErrorMessage(state, payload) {
       state.errorMessage = payload;
     },
+    pushOrder(state, payload) {
+      state.user.order.push(payload);
+    },
   },
   actions: {
     logOutAction(context) {
@@ -76,10 +79,8 @@ export const userModule = {
         if (data[0]) {
           context.commit("setErrorMessage", "Email already registered");
           context.commit("setIsUser", false);
-          return false;
         } else {
           context.commit("setIsUser", true);
-          return true;
         }
       } catch (err) {
         console.log(err);
@@ -87,15 +88,14 @@ export const userModule = {
     },
     getUserLogInAction: async (context, payload) => {
       try {
-        let data = await fetchHelper.get(payload[0]);
+        let data = await fetchHelper.get(payload.query);
         if (!data[0]) {
           context.commit("setErrorMessage", "User not found");
           context.commit("setIsUser", false);
         } else {
           context.commit("setIsUser", true);
-          if (data[0].password === payload[1]) {
+          if (data[0].password === payload.password) {
             context.commit("setUser", data[0]);
-            return true;
           } else {
             context.commit("setIsUser", false);
             context.commit("setErrorMessage", "Invalid password");
@@ -116,6 +116,9 @@ export const userModule = {
       } catch (err) {
         console.log(err);
       }
+    },
+    pushOrderAction: (context, payload) => {
+      context.commit("pushOrder", payload);
     },
   },
 };

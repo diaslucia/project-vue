@@ -92,18 +92,15 @@ export default {
     visibility() {
       return this.getIsUser ? "hidden" : "visible";
     },
-    ...mapGetters("user", ["getIsUser", "getErrorMessage"]),
+    ...mapGetters("user", ["getIsUser", "getErrorMessage", "getIsUser"]),
   },
   methods: {
     async submitForm() {
       if (this.formState.$valid) {
         const userQuery = `${url}/users?email=${this.model.email}`;
-        let res = await this.$store.dispatch(
-          "user/getUserSignUpAction",
-          userQuery
-        );
+        await this.$store.dispatch("user/getUserSignUpAction", userQuery);
         // Si no encuentra un usuario, lo guarda
-        if (res) {
+        if (this.getIsUser) {
           await this.$store.dispatch("user/postUserAction", this.model);
           this.$router.push("/");
         }

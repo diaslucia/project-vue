@@ -73,7 +73,6 @@
 </template>
 
 <script>
-import { userStore } from "@/store/userStore";
 import SpinnerSpin from "@/components/SpinnerSpin.vue";
 import { fetchHelper } from "@/services/fetchHelper.js";
 import { mapGetters } from "vuex";
@@ -90,7 +89,6 @@ export default {
       price: "",
       image: "",
     },
-    userStore,
     spinner: true,
   }),
   components: {

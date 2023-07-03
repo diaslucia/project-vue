@@ -64,17 +64,17 @@ export default {
     visibility() {
       return this.getIsUser ? "hidden" : "visible";
     },
-    ...mapGetters("user", ["getErrorMessage", "getIsUser"]),
+    ...mapGetters("user", ["getErrorMessage", "getIsUser", "loggedIn"]),
   },
   methods: {
     async submitForm() {
       if (this.formState.$valid) {
         const userQuery = `${url}/users?email=${this.model.email}`;
-        let res = await this.$store.dispatch("user/getUserLogInAction", [
-          userQuery,
-          this.model.password,
-        ]);
-        if (res) this.$router.push("/");
+        await this.$store.dispatch("user/getUserLogInAction", {
+          query: userQuery,
+          password: this.model.password,
+        });
+        if (this.loggedIn) this.$router.push("/");
       }
     },
   },
