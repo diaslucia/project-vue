@@ -38,7 +38,7 @@
           ><font-awesome-icon icon="fa-solid fa-cart-shopping" class="icon" />
         </router-link>
         <div class="number">
-          <span>{{ this.cartStore.cartTotal() }}</span>
+          <span>{{ getTotalQuantity }}</span>
         </div>
       </li>
     </ul>
@@ -58,6 +58,7 @@ export default {
   }),
   computed: {
     ...mapGetters("user", ["isAdmin", "loggedIn", "getUser"]),
+    ...mapGetters("cart", ["getTotalQuantity"]),
     visibility() {
       return this.isAdmin ? "hidden" : "visible";
     },

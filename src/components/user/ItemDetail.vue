@@ -25,7 +25,6 @@
 
 <script>
 import ItemCount from "./ItemCount.vue";
-import { cartStore } from "@/store/cartStore";
 
 export default {
   name: "ItemDetail",
@@ -42,13 +41,15 @@ export default {
     },
   },
   data: () => ({
-    cartStore,
     quantity: 1,
     added: false,
   }),
   methods: {
     addCart() {
-      this.cartStore.addToCart(this.product, this.quantity);
+      this.$store.dispatch("cart/addToCartAction", {
+        product: this.product,
+        quantitySelected: this.quantity,
+      });
       this.added = true;
     },
     substractProduct() {

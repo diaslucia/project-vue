@@ -1,24 +1,22 @@
 <template>
   <div class="container">
-    <p v-if="this.cartStore.cart.length === 0" class="text">
-      Your cart is empty!
-    </p>
-
-    <table v-else class="table">
+    <table v-if="this.getCartLength" class="table">
       <tbody>
         <ItemCart
-          v-for="product in this.cartStore.cart"
+          v-for="product in this.getCart"
           :key="product.id"
           :product="product"
         />
       </tbody>
     </table>
 
-    <p class="total" v-if="this.cartStore.cart.length">
+    <p v-else class="text">Your cart is empty!</p>
+
+    <p class="total" v-if="this.getCartLength">
       Total:
-      <span class="total_span"> US${{ this.cartStore.cartTotalPrice() }}</span>
+      <span class="total_span"> US${{ getTotalPrice }}</span>
     </p>
-    <button class="button" v-if="this.cartStore.cart.length" @click="buyCart">
+    <button class="button" v-if="this.getCartLength" @click="buyCart">
       Buy
     </button>
   </div>
@@ -26,7 +24,6 @@
 
 <script>
 import ItemCart from "@/components/cart/ItemCart.vue";
-import { cartStore } from "@/store/cartStore";
 import { getTimeStamp } from "@/utils/helper.js";
 import { fetchHelper } from "@/services/fetchHelper.js";
 import { mapGetters } from "vuex";
@@ -37,22 +34,19 @@ export default {
   components: {
     ItemCart,
   },
-  data: () => ({
-    cartStore,
-  }),
   computed: {
     ...mapGetters("user", ["loggedIn"]),
+    ...mapGetters("cart", ["getCart", "getTotalPrice", "getCartLength"]),
   },
   methods: {
     async buyCart() {
       if (this.loggedIn) {
         const timestamp = getTimeStamp();
-        const total = this.cartStore.cartTotalPrice();
 
         const newOrder = {
           timestamp: timestamp,
-          total: total,
-          products: [...this.cartStore.cart],
+          total: this.getTotalPrice,
+          products: [...this.getCart],
         };
         this.$store.dispatch("user/pushOrderAction", newOrder);
 
@@ -61,7 +55,7 @@ export default {
             `${url}/users/${this.$store.user.id}`,
             this.$store.user
           );
-          this.cartStore.emptyCart();
+          this.$store.dispatch("cart/setEmptyCartAction");
         } catch (err) {
           console.log(err);
         } finally {

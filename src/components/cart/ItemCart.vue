@@ -23,16 +23,13 @@
 
 <script>
 import ItemCount from "@/components/user/ItemCount.vue";
-import { cartStore } from "@/store/cartStore";
+import { mapActions } from "vuex";
 
 export default {
   name: "ItemCart",
   components: {
     ItemCount,
   },
-  data: () => ({
-    cartStore,
-  }),
   props: {
     product: {
       id: String,
@@ -43,14 +40,19 @@ export default {
     },
   },
   methods: {
+    ...mapActions("cart", [
+      "deleteProductAction",
+      "sumProductAction",
+      "substractProductAction",
+    ]),
     subProduct() {
-      this.cartStore.substractProduct(this.product);
+      this.substractProduct(this.product);
     },
     sumProduct() {
-      this.cartStore.sumProduct(this.product);
+      this.sumProductAction(this.product);
     },
     deleteProduct() {
-      this.cartStore.deleteProduct(this.product);
+      this.deleteProductAction(this.product);
     },
   },
 };
