@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 const url = process.env.VUE_APP_MOCKAPI_URL;
 
 export default {
@@ -89,19 +89,20 @@ export default {
     },
   }),
   computed: {
+    ...mapGetters("user", ["getIsUser", "getErrorMessage"]),
     visibility() {
       return this.getIsUser ? "hidden" : "visible";
     },
-    ...mapGetters("user", ["getIsUser", "getErrorMessage", "getIsUser"]),
   },
   methods: {
+    ...mapActions("user", ["getUserSignUpAction", "postUserAction"]),
     async submitForm() {
       if (this.formState.$valid) {
         const userQuery = `${url}/users?email=${this.model.email}`;
-        await this.$store.dispatch("user/getUserSignUpAction", userQuery);
+        await this.getUserSignUpAction(userQuery);
         // Si no encuentra un usuario, lo guarda
         if (this.getIsUser) {
-          await this.$store.dispatch("user/postUserAction", this.model);
+          await this.postUserAction(this.model);
           this.$router.push("/");
         }
       }

@@ -57,10 +57,10 @@ export default {
     dropdown: false,
   }),
   computed: {
+    ...mapGetters("user", ["isAdmin", "loggedIn", "getUser"]),
     visibility() {
       return this.isAdmin ? "hidden" : "visible";
     },
-    ...mapGetters("user", ["isAdmin", "loggedIn", "getUser"]),
   },
   methods: {
     handleDropdown() {

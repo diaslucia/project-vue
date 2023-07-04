@@ -61,10 +61,10 @@ export default {
     },
   }),
   computed: {
+    ...mapGetters("user", ["getErrorMessage", "getIsUser", "loggedIn"]),
     visibility() {
       return this.getIsUser ? "hidden" : "visible";
     },
-    ...mapGetters("user", ["getErrorMessage", "getIsUser", "loggedIn"]),
   },
   methods: {
     async submitForm() {
