@@ -46,13 +46,11 @@
 </template>
 
 <script>
-import { cartStore } from "@/store/cartStore";
 import { mapGetters } from "vuex";
 
 export default {
   name: "NavBar",
   data: () => ({
-    cartStore,
     total: 0,
     dropdown: false,
   }),
@@ -73,8 +71,10 @@ export default {
       this.$router.push("/login");
     },
     goTo(link) {
-      this.dropdown = !this.dropdown;
-      this.$router.push(link);
+      if (this.$route.path !== link) {
+        this.dropdown = !this.dropdown;
+        this.$router.push(link);
+      }
     },
   },
 };

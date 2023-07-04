@@ -20,14 +20,11 @@ export const cartModule = {
     findById: (state) => (id) => {
       return state.cart.find((prod) => prod.id === id);
     },
-    filterById: (state) => (id) => {
-      return state.cart.filter((prod) => prod.id !== id);
+    findIndexById: (state) => (id) => {
+      return state.cart.findIndex((prod) => prod.id === id);
     },
   },
   mutations: {
-    setCart(state, payload) {
-      state.cart = payload;
-    },
     setLoading(state, payload) {
       state.loading = payload;
     },
@@ -36,6 +33,9 @@ export const cartModule = {
     },
     pushProduct(state, payload) {
       state.cart.push(payload);
+    },
+    removeFromCart: (state, index) => {
+      state.cart.splice(index, 1);
     },
   },
   actions: {
@@ -46,39 +46,33 @@ export const cartModule = {
       context.commit("setEmptyCart");
     },
     deleteProductAction: ({ getters, commit }, payload) => {
-      let filteredProducts = getters.filterById(payload.id);
-      commit("setCart", filteredProducts);
+      let findProduct = getters.findIndexById(payload.id);
+      commit("removeFromCart", findProduct);
     },
-    sumProductAction: ({ getters }, payload) => {
+    sumProductAction: ({ getters, commit }, payload) => {
       let findProduct = getters.findById(payload.id);
-      findProduct.quantity++;
-      /* 
-      commit("setCart", [
-        ...getters.getCart,
-        {
-          ...findProduct,
-          quantity: findProduct.quantity + 1,
-          subtotal: Number(findProduct.price * (findProduct.quantity + 1)),
-        },
-      ]); */
+      commit("removeFromCart", findProduct);
+      commit("pushProduct", {
+        ...findProduct,
+        quantity: findProduct.quantity + 1,
+        subtotal: Number(findProduct.price * (findProduct.quantity + 1)),
+      });
     },
     substractProductAction: ({ getters, commit }, payload) => {
       let findProduct = getters.findById(payload.id);
       if (findProduct.quantity > 0) {
-        commit("setCart", [
-          ...getters.getCart,
-          {
-            ...findProduct,
-            quantity: findProduct.quantity - 1,
-            subtotal: Number(findProduct.price * (findProduct.quantity - 1)),
-          },
-        ]);
+        commit("removeFromCart", findProduct);
+        commit("pushProduct", {
+          ...findProduct,
+          quantity: findProduct.quantity - 1,
+          subtotal: Number(findProduct.price * (findProduct.quantity - 1)),
+        });
       }
     },
     addToCartAction: ({ getters, commit }, payload) => {
       let findProduct = getters.findById(payload.product.id);
       if (findProduct) {
-        commit("setCart", {
+        commit("pushProduct", {
           ...findProduct,
           quantity: payload.quantitySelected,
           subtotal: Number(payload.product.price * payload.quantitySelected),

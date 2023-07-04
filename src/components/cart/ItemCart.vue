@@ -46,7 +46,7 @@ export default {
       "substractProductAction",
     ]),
     subProduct() {
-      this.substractProduct(this.product);
+      this.substractProductAction(this.product);
     },
     sumProduct() {
       this.sumProductAction(this.product);
