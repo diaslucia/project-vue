@@ -72,10 +72,14 @@ export const cartModule = {
     addToCartAction: ({ getters, commit }, payload) => {
       let findProduct = getters.findById(payload.product.id);
       if (findProduct) {
+        commit("removeFromCart", findProduct);
         commit("pushProduct", {
           ...findProduct,
-          quantity: payload.quantitySelected,
-          subtotal: Number(payload.product.price * payload.quantitySelected),
+          quantity: findProduct.quantity + payload.quantitySelected,
+          subtotal: Number(
+            payload.product.price *
+              (payload.quantitySelected + findProduct.quantity)
+          ),
         });
       } else {
         commit("pushProduct", {
