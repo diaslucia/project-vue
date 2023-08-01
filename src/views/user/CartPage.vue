@@ -99,6 +99,7 @@ export default {
   align-self: flex-end;
   width: 100%;
   margin-right: 30px;
+  z-index: 9;
 }
 
 .total_span {
@@ -106,6 +107,7 @@ export default {
   font-size: 18px;
   font-weight: normal;
   margin-left: 10px;
+  z-index: 9;
 }
 
 .button {
@@ -118,5 +120,6 @@ export default {
   border: none;
   font-size: 18px;
   margin-right: 30px;
+  z-index: 9;
 }
 </style>
