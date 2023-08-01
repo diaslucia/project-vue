@@ -26,8 +26,8 @@
 import ItemCart from "@/components/cart/ItemCart.vue";
 import { getTimeStamp } from "@/utils/helper.js";
 import { fetchHelper } from "@/services/fetchHelper.js";
-import { mapGetters } from "vuex";
 const url = process.env.VUE_APP_MOCKAPI_URL;
+import { mapGetters } from "vuex";
 
 export default {
   name: "CartPage",
@@ -35,8 +35,13 @@ export default {
     ItemCart,
   },
   computed: {
-    ...mapGetters("user", ["loggedIn"]),
-    ...mapGetters("cart", ["getCart", "getTotalPrice", "getCartLength"]),
+    ...mapGetters("user", ["loggedIn", "getUser"]),
+    ...mapGetters("cart", [
+      "getCart",
+      "getTotalPrice",
+      "getCartLength",
+      "setEmptyCartAction",
+    ]),
   },
   methods: {
     async buyCart() {
@@ -52,8 +57,8 @@ export default {
 
         try {
           await fetchHelper.put(
-            `${url}/users/${this.$store.user.id}`,
-            this.$store.user
+            `${url}/users/${this.getUser.id}`,
+            this.getUser
           );
           this.$store.dispatch("cart/setEmptyCartAction");
         } catch (err) {
