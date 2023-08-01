@@ -37,15 +37,15 @@ export default {
 <style scoped>
 .button {
   background-color: #027b7f;
-  width: 50px;
-  height: 50px;
+  width: 70px;
+  height: 70px;
   display: flex;
   justify-content: center;
   align-items: center;
   color: white;
   border: none;
   border-radius: 100%;
-  font-size: 25px;
+  font-size: 30px;
   position: fixed;
   bottom: 20px;
   right: 20px;

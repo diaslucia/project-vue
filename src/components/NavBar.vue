@@ -89,6 +89,7 @@ export default {
   width: 100%;
   height: 60px;
   position: relative;
+  z-index: 99;
 }
 .list {
   width: 100%;
