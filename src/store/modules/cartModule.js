@@ -37,6 +37,9 @@ export const cartModule = {
     removeFromCart: (state, index) => {
       state.cart.splice(index, 1);
     },
+    replaceProduct: (state, payload) => {
+      state.cart.splice(payload.index, 1, payload.replacement);
+    },
   },
   actions: {
     getCartAction: (context) => {
@@ -46,26 +49,34 @@ export const cartModule = {
       context.commit("setEmptyCart");
     },
     deleteProductAction: ({ getters, commit }, payload) => {
-      let findProduct = getters.findIndexById(payload.id);
-      commit("removeFromCart", findProduct);
+      let indexProduct = getters.findIndexById(payload.id);
+      commit("removeFromCart", indexProduct);
     },
     sumProductAction: ({ getters, commit }, payload) => {
       let findProduct = getters.findById(payload.id);
-      commit("removeFromCart", findProduct);
-      commit("pushProduct", {
-        ...findProduct,
-        quantity: findProduct.quantity + 1,
-        subtotal: Number(findProduct.price * (findProduct.quantity + 1)),
+      let indexProduct = getters.findIndexById(payload.id);
+
+      commit("replaceProduct", {
+        index: indexProduct,
+        replacement: {
+          ...findProduct,
+          quantity: findProduct.quantity + 1,
+          subtotal: Number(findProduct.price * (findProduct.quantity + 1)),
+        },
       });
     },
     substractProductAction: ({ getters, commit }, payload) => {
       let findProduct = getters.findById(payload.id);
+      let indexProduct = getters.findIndexById(payload.id);
+
       if (findProduct.quantity > 0) {
-        commit("removeFromCart", findProduct);
-        commit("pushProduct", {
-          ...findProduct,
-          quantity: findProduct.quantity - 1,
-          subtotal: Number(findProduct.price * (findProduct.quantity - 1)),
+        commit("replaceProduct", {
+          index: indexProduct,
+          replacement: {
+            ...findProduct,
+            quantity: findProduct.quantity - 1,
+            subtotal: Number(findProduct.price * (findProduct.quantity - 1)),
+          },
         });
       }
     },
@@ -74,14 +85,16 @@ export const cartModule = {
       let indexProduct = getters.findIndexById(payload.id);
 
       if (findProduct) {
-        commit("removeFromCart", indexProduct);
-        commit("pushProduct", {
-          ...findProduct,
-          quantity: findProduct.quantity + payload.quantitySelected,
-          subtotal: Number(
-            payload.product.price *
-              (payload.quantitySelected + findProduct.quantity)
-          ),
+        commit("replaceProduct", {
+          index: indexProduct,
+          replacement: {
+            ...findProduct,
+            quantity: findProduct.quantity + payload.quantitySelected,
+            subtotal: Number(
+              payload.product.price *
+                (payload.quantitySelected + findProduct.quantity)
+            ),
+          },
         });
       } else {
         commit("pushProduct", {
