@@ -5,21 +5,20 @@
   <a href="https://github.com/othneildrew/Best-README-Template">
     <img src="src/assets/logo.png" alt="Logo" width="80" height="80">
   </a>
-
   <h3 align="center">Donut Shop in VUE</h3>
+   ![image](https://img.shields.io/badge/Vue%20js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D)
    <a href="https://project-jmnhkxgaq-diaslucia.vercel.app/">View Demo</a>
    <br/>
+     <br/>
 </div>
 
 <p align="center">
-  <img src="src/assets/gif.gif" width="700" align=center />
+  <img src="src/assets/gif.gif" width="400" align=center />
 </p>
 
 ## 🔎 About
 
-This website was developed using Vue ![image](https://img.shields.io/badge/Vue%20js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D)
-
-It serves as an e-commerce platform, offering user registration and login functionalities. Customers can register and log in to purchase delicious donuts and access their order history. On the other hand, administrators have special access rights, enabling them to add, delete, or modify products, as well as view all client orders..
+This website was developed using Vue. It serves as an e-commerce platform, offering user registration and login functionalities. Customers can register and log in to purchase delicious donuts and access their order history. On the other hand, administrators have special access rights, enabling them to add, delete, or modify products, as well as view all client orders..
 
 ## 🚀 Ejecution
 
