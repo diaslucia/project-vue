@@ -25,7 +25,7 @@
 
 ## 🔎 About
 
-This website was developed using Vue.
+This website was developed using Vue and [MockAPi](https://mockapi.io/) as an API server.
 
 It serves as an e-commerce platform, offering user registration and login functionalities. Customers can register and log in to purchase delicious donuts and access their order history. On the other hand, administrators have special access rights, enabling them to add, delete, or modify products, as well as view all client orders..
 
