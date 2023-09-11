@@ -57,10 +57,10 @@ Steps to install and run the project:
 
 ## 📂 Structure
 
-The structure of the files is:
+The file structure is:
 
 - assets: to store images.
-- components: to store all componentes.
+- components: to store all components.
 - services: to store fetch helper.
 - utils: to store helpers.
 - views: to store pages structure components.
